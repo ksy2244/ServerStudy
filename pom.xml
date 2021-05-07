@@ -74,8 +74,6 @@
 			<version>2.12.2</version>
 		</dependency>
 
-
-
 	</dependencies>
 
 	<build>
