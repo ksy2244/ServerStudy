@@ -99,4 +99,38 @@ public class Controller {
         }
         return responseEntity;
     }
+
+    @RequestMapping(value = "/put/{id}", method = RequestMethod.PUT, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> deleteResponseEntity(HttpServletRequest request, @PathVariable String id, @RequestBody Map<String, Object> requestMap)  {
+        ResponseEntity<?> responseEntity = null;
+        ArrayList<Map<String, Object>> postValueArrayList = null;
+        postValueArrayList = testDBHashMap.get(id);
+
+        if (!testDBHashMap.isEmpty()) { //testDBHashMap 리스트에 요소가 있는지 없는지를 판정하여 비어있지 않은 경우
+            if (id != null  && !id.equals("") && testDBHashMap.containsKey(id)){ //id는 null이 아니고 ""가 아니고  id 값을 갖고 있다면
+                for (Map <String, Object> map : postValueArrayList) {
+                    if (requestMap.keySet().equals(map.keySet())) {
+                        postValueArrayList.set(postValueArrayList.indexOf(map), requestMap);
+                        //값 변경하는 부분
+                        //set(int index,E  element)리스트의 지정된 위치에 있는 요소를, 지정된 요소로 옮겨놓음
+                        //indexOf(Object  elem) equals 메서드를 사용해 동일한지 어떤지를 판정하면서, 지정된 인수와 같은 내용의 요소를 선두로부터 검색
+                        testDBHashMap.replace(id, postValueArrayList);
+                        responseEntity = new ResponseEntity<>(requestMap, HttpStatus.OK);
+                    } else {
+                        responseEntity = new ResponseEntity<>("NOT_CONTAIN", HttpStatus.NOT_FOUND);
+                    }
+                }
+            }
+
+        } else {
+              responseEntity = new ResponseEntity<>("BAD_REQUSET", HttpStatus.BAD_REQUEST);
+            }
+
+        return responseEntity;
+    }
 }
+
+
+
+
